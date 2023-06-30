@@ -1,14 +1,31 @@
 import React from 'react'
+import { useEffect } from 'react'
+import { useState } from 'react'
 import Card from '../Components/Card'
-
-//Este componente debera ser estilado como "dark" o "light" dependiendo del theme del Context
+import { useTheme } from '../Components/utils/global.context'
 
 const Home = () => {
+  
+  const {theme} = useTheme()
+  const [dentists,setDentists]= useState([])
+
+  const getDentists = async()=>{
+    const res = await fetch(`https://jsonplaceholder.typicode.com/users`)
+    const data = await res.json()
+    setDentists(data)
+}
+
+useEffect(()=>{
+  getDentists()
+},[])
+
   return (
-    <main className="" >
-      <h1>Home</h1>
+    <main className={theme.body} >
+      <h1 className={theme.title}>Home</h1>
       <div className='card-grid'>
-        {/* Aqui deberias renderizar las cards */}
+        {dentists.map(item=>(
+          <Card key={item.id} name={item.name} username={item.username} id={item.id}/>
+        ))}
       </div>
     </main>
   )
